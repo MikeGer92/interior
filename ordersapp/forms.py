@@ -6,7 +6,7 @@ from ordersapp.models import Order, OrderItem
 class OrderEditForm(forms.ModelForm):
     class Meta:
         model = Order
-        exclude = ('user')
+        exclude = ('user',)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

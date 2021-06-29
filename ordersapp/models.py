@@ -6,6 +6,7 @@ from mainapp.models import Product
 
 class Order(models.Model):
 
+    objects = None
     FORMING = 'FM'
     SENT_TO_PROCED = 'STP'
     PROCEDED = "PSD"
@@ -24,12 +25,11 @@ class Order(models.Model):
         (DELIVERED, 'Выдан'),
     )
 
-
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     created = models.DateTimeField(auto_now_add=True, verbose_name='создан')
     update = models.DateTimeField(auto_now=True, verbose_name='обновлен')
     is_active = models.BooleanField(default=True)
-    status = models.CharField(choices=STATUSES, default=FORMING, verbose_name='статус заказа')
+    status = models.CharField(choices=STATUSES, default=FORMING, verbose_name='статус заказа', max_length=3)
 
     def get_total_quantity(self):
         _items = self.orderitems.select_related()
@@ -38,7 +38,7 @@ class Order(models.Model):
 
     def get_total_cost(self):
         _items = self.orderitems.select_related()
-        _totalcost = sum(list(map(lambda x: x.get_product_cost, _items)))
+        _totalcost = sum(list(map(lambda x: x.get_product_cost(), _items)))
         return _totalcost
 
 
