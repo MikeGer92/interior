@@ -1703,3 +1703,14 @@ td:first-child {
     width: 140px;
     height: 100%;
 }
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+
+}
+.dropdown-item {
+    display: none;
+
+}
+.dropdown:hover .dropdown-item{display:block;}
