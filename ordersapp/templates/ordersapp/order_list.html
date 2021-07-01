@@ -19,24 +19,26 @@
                     <td>{{ item.created|date:'d.m.Y H:i:s' }}</td>
                     <td>{{ item.updated|date:'d.m.Y H:i:s'  }}</td>
                     <td>{{ item.get_status_display }}</td>
-                    <td><a class="btn btn-link" href="{% url 'order:read' item_pk %}">Посмотреть</a> </td>
+                    <td><a class="btn btn-link" href="{% url 'order:read' item.pk %}">Посмотреть</a> </td>
                     <td>
                         {% if item.status == 'FM' %}
-                            <td><a class="btn btn-link" href="{% url 'order:update' item_pk %}">Изменить</a> </td>
+                            <td><a class="btn btn-link" href="{% url 'order:update' item.pk %}">Изменить</a> </td>
                         {% endif %}
                     </td>
                     <td>
                         {% if item.status == 'FM' %}
-                            <td><a class="btn btn-link" href="{% url 'order:delete' item_pk %}">Удалить</a> </td>
+                            <td><a class="btn btn-link" href="{% url 'order:delete' item.pk %}">Удалить</a> </td>
                         {% endif %}>
                     </td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
-    <a class="btn btm-primary" href="{% url 'order:create' %}">Новый заказ</a>
-    <br>
-    <a class="btn btm-link" href="{% url 'main' %}">На главную</a>
+    <div class="text-center">
+        <a class="btn btn-primary" href="{% url 'order:create' %}">Новый заказ</a>
+        <br>
+        <a class="btn btn-link" href="{% url 'main' %}">На главную</a>
+    </div>
 
 
 

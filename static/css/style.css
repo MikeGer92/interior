@@ -1711,6 +1711,7 @@ td:first-child {
 }
 .dropdown-item {
     display: none;
+    text-align:center
 
 }
 .dropdown:hover .dropdown-item{display:block;}
