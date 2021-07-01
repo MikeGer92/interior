@@ -15,7 +15,7 @@ class OrderList(ListView):
     model = Order
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user, is_active=True)
 
 
 class OrderCreate(CreateView):
@@ -36,7 +36,8 @@ class OrderCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
-            formset = OrderFormSet()
+            else:
+                formset = OrderFormSet()
         data['orderitems'] = formset
         return data
 
@@ -67,9 +68,9 @@ class OrderUpdate(UpdateView):
         data = super().get_context_data(**kwargs)
         OrderFormSet = inlineformset_factory(Order, OrderItem, form=OrderItemEditForm, extra=1)
         if self.request.POST:
-            formset = OrderFormSet(self.request.POST, isinstance=self.object)
+            formset = OrderFormSet(self.request.POST, instance=self.object)
         else:
-            formset = OrderFormSet(isinstance=self.object)
+            formset = OrderFormSet(instance=self.object)
         data['orderitems'] = formset
         return data
 
@@ -92,11 +93,13 @@ class OrderUpdate(UpdateView):
 
 
 class OrderDelete(DeleteView):
-    pass
+    model = Order
+    success_url = reverse_lazy('order:list')
 
 
 class OrderRead(DetailView):
-    pass
+    model = Order
+    success_url = reverse_lazy('order:list')
 
 
 def forming_complete(request, pk):
