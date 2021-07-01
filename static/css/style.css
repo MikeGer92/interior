@@ -1715,3 +1715,19 @@ td:first-child {
 
 }
 .dropdown:hover .dropdown-item{display:block;}
+
+.basket_orderlist {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+}
+.order_productimage {
+    display: flex;
+    width: 270px;
+    height: 270px;
+}
+.basket_orderrecord {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px;
+}
