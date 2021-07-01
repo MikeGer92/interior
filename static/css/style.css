@@ -1707,6 +1707,8 @@ td:first-child {
     display: flex;
     flex-direction: column;
     list-style-type: none;
+    align-items: center;
+    margin-top: 15px;
 
 }
 .dropdown-item {
@@ -1728,6 +1730,7 @@ td:first-child {
 }
 .basket_orderrecord {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     margin: 25px;
+    border: 2px solid grey
 }
