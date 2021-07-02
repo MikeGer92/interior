@@ -13,7 +13,7 @@
                         <th>Статус</th>
                      </thead>
                      <tbody>
-                         {% for item in object_list %}
+                         {% for item in orders_list %}
                              <tr>
                                  <td>{{ item.pk }}</td>
                                  <td>{{ item.created|date:'d.m.Y H:i:s' }}</td>

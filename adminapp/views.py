@@ -104,7 +104,9 @@ def all_orders(request):
     title = 'админка/заказы'
 
     orders_list = Order.objects.all()
-    print(orders_list[1])
+    for num, obj in enumerate(orders_list):
+        obj = orders_list[num]
+        print(obj)
 
     content = {
         'title': title,
