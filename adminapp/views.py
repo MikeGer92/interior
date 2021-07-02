@@ -12,6 +12,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from django.views.generic.detail import DetailView
 
+from ordersapp.models import Order
+
 
 class UsersListView(ListView):
     model = ShopUser
@@ -87,6 +89,7 @@ def categories(request):
     title = 'админка/категории'
     
     categories_list = ProductCategory.objects.all()
+
     
     content = {
         'title': title,
@@ -94,6 +97,21 @@ def categories(request):
     }
     
     return render(request, 'adminapp/categories.html', content)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def all_orders(request):
+    title = 'админка/заказы'
+
+    orders_list = Order.objects.all()
+    print(orders_list[1])
+
+    content = {
+        'title': title,
+        'objects': orders_list
+    }
+
+    return render(request, 'adminapp/all_orders.html', content)
     
 
 class ProductCategoryCreateView(CreateView):
