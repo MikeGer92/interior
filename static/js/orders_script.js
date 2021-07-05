@@ -28,6 +28,17 @@ window.onload = function () {
         }
     });
 
+        $('.order_form').on('click', 'input[type=checkbox]', function(){
+        let target = event.target;
+        orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-DELETE'));
+        if(target.checked){
+            delta_quantity = -quantity_arr[orderitem_num];
+        }else {
+            delta_quantity = quantity_arr[orderitem_num];
+        }
+        orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
+        });
+
     function orderSummaryUpdate(orderitem_price, delta_quantity){
             delta_cost = orderitem_price * delta_quantity;
             order_total_price = Number((order_total_price + delta_cost).toFixed(2));
@@ -36,8 +47,5 @@ window.onload = function () {
             $('.order_total_quantity').text(order_total_quantity.toString());
             $('.order_total_cost').text(order_total_price.toString());
     }
-    console.log(price_arr);
-    console.log(quantity_arr);
-
 
 };
