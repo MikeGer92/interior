@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 
+
 from mainapp.models import Product
 
 
@@ -40,6 +41,10 @@ class Order(models.Model):
         _items = self.orderitems.select_related()
         _totalcost = sum(list(map(lambda x: x.get_product_cost(), _items)))
         return _totalcost
+
+    @staticmethod
+    def get_item(pk):
+        return Order.objects.get(pk=pk)
 
     def delete(self):
         for item in self.orderitems.select_related():

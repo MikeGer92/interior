@@ -3,19 +3,19 @@ from django.conf import settings
 from mainapp.models import Product
 
 # способ работы с остатками через менеджера
-class BasketQuerySet(models.QuerySet):
-
-    def delete(self):
-        for item in self:
-            item.product.quantity += item.quantity
-            item.product.save()
-        super().delete()
+# class BasketQuerySet(models.QuerySet):
+#
+#     def delete(self):
+#         for item in self:
+#             item.product.quantity += item.quantity
+#             item.product.save()
+#         super().delete()
 
 
 
 
 class Basket(models.Model):
-    objects = BasketQuerySet.as_manager()
+    # objects = BasketQuerySet.as_manager()
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -63,18 +63,23 @@ class Basket(models.Model):
 
         return basket_items_dic
 
-    def delete(self, *args, **kwargs):
-        self.product.quantity += self.quantity
-        self.product.save()
-        super().delete(*args, **kwargs)
+    @staticmethod
+    def get_item(pk):
+        return Basket.objects.get(pk=pk)
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            self.product.quantity -= self.quantity - self.__class__.objects.get(pk=self.pk).quantity
-        else:
-            self.product.quantity -= self.quantity
-        self.product.save()
-        super().save(*args, **kwargs)
+# для работы с отстатками через менеджера BasketQuerySet
+    # def delete(self, *args, **kwargs):
+    #     self.product.quantity += self.quantity
+    #     self.product.save()
+    #     super().delete(*args, **kwargs)
+    #
+    # def save(self, *args, **kwargs):
+    #     if self.pk:
+    #         self.product.quantity -= self.quantity - self.__class__.objects.get(pk=self.pk).quantity
+    #     else:
+    #         self.product.quantity -= self.quantity
+    #     self.product.save()
+    #     super().save(*args, **kwargs)
 
 
 
