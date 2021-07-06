@@ -40,7 +40,8 @@ class OrderCreate(CreateView):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
                     form.initial['price'] = basket_items[num].product.price
-                basket_items.delete()
+                for basket_item in basket_items:
+                    basket_item.delete()
             else:
                 formset = OrderFormSet()
         data['orderitems'] = formset
@@ -119,7 +120,7 @@ def forming_complete(request, pk):
 
 
 # @receiver(pre_save, sender=Basket)
-# @receiver(pre_save, sender=Order)
+# @receiver(pre_save, sender=OrderItem)
 # def product_quantity_update_save(sender, update_fields, instance, **kwargs):
 #     if instance.pk:
 #         instance.product.quantity -= instance.quantity - instance.get_item(instance.pk).quantity
@@ -134,4 +135,11 @@ def forming_complete(request, pk):
 #     instance.product.save()
 
 
-
+def payment_result(request):
+    payment_status = request.GET.get('ik_inv_st')
+    if payment_status == 'success':
+        order_pk = request.GET.get('ik_pm_no').replace('ID', '')
+        order_item = Order.objects.get(pk=order_pk)
+        order_item.status = Order.PAID
+        order_item.save()
+    return HttpResponseRedirect(reverse('order:list'))

@@ -42,9 +42,6 @@ class Order(models.Model):
         _totalcost = sum(list(map(lambda x: x.get_product_cost(), _items)))
         return _totalcost
 
-    @staticmethod
-    def get_item(pk):
-        return Order.objects.get(pk=pk)
 
     def delete(self):
         for item in self.orderitems.select_related():
@@ -63,3 +60,7 @@ class OrderItem(models.Model):
 
     def get_product_cost(self):
         return self.product.price * self.quantity
+
+    @staticmethod
+    def get_item(pk):
+        return Order.objects.get(pk=pk)
