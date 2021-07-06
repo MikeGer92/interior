@@ -13,14 +13,12 @@
                         <th>Статус</th>
                      </thead>
                      <tbody>
-                         {% for item in orders_list %}
-                             <tr>
-                                 <td>{{ item.pk }}</td>
-                                 <td>{{ item.created|date:'d.m.Y H:i:s' }}</td>
-                                 <td>{{ item.updated|date:'d.m.Y H:i:s'  }}</td>
-                                 <td>{{ item.get_status_display }}</td>
-                             </tr>
-                         {% endfor%}
+                         <tr>
+                             <td>{{ object.pk }}</td>
+                             <td>{{ object.created|date:'d.m.Y H:i:s' }}</td>
+                             <td>{{ object.updated|date:'d.m.Y H:i:s'  }}</td>
+                             <td>{{ object.get_status_display }}</td>
+                         </tr>
                      </tbody>
                  </table>
              </div>
