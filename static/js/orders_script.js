@@ -25,7 +25,6 @@ window.onload = function () {
             delta_quantity = orderitem_quntity - quantity_arr[orderitem_num];
             quantity_arr[orderitem_num] = orderitem_quntity;
             orderSummaryRecalc();
-//            orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
         }else {
             orderitem_quntity = 0;
         }
@@ -36,11 +35,13 @@ window.onload = function () {
         orderitem_num = parseInt(target.name.replace('orderitems-', '').replace('-DELETE'));
         if(target.checked){
             delta_quantity = -quantity_arr[orderitem_num];
+
         }else {
             delta_quantity = quantity_arr[orderitem_num];
         }
+        console.log(price_arr[orderitem_num])
         orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
-        });
+    });
 
 $('.order_form select').change(function (event) {
         let target = event.target;
@@ -66,10 +67,8 @@ $('.order_form select').change(function (event) {
                         }
 
                         let price_html = '<span class="orderitems-"' + 'orderitem_num'+ '-price">'+ data.price.toString().replace('.', ',') + '</span> руб';
-//                        let quantity_html = '<input class="form-control" id="id_orderitems' + 'orderitem_num' + '-quantity" type="number" name="orderitems' + 'orderitem_num' + '-quantity" value="" >'
                         let cur_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
                         cur_tr.find('td:eq(2)').html(price_html);
-//                        cur_tr.find('td:eq(1)').html(quantity_html);
                         orderSummaryRecalc();
                     }
                 }
@@ -101,7 +100,6 @@ $('.order_form select').change(function (event) {
         for (let i = 0; i < total_forms; i++) {
             order_total_quantity += quantity_arr[i];
             order_total_cost += price_arr[i] * quantity_arr[i];
-            console.log(order_total_cost)
         }
         $('.order_total_quantity').html(order_total_quantity.toString());
         $('.order_total_cost').html(order_total_cost.toFixed(2).toString());
