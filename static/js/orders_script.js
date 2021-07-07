@@ -24,7 +24,10 @@ window.onload = function () {
             orderitem_quntity = parseInt(target.value);
             delta_quantity = orderitem_quntity - quantity_arr[orderitem_num];
             quantity_arr[orderitem_num] = orderitem_quntity;
-            orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
+            orderSummaryRecalc();
+//            orderSummaryUpdate(price_arr[orderitem_num], delta_quantity);
+        }else {
+            orderitem_quntity = 0;
         }
     });
 
@@ -41,59 +44,68 @@ window.onload = function () {
 
 $('.order_form select').change(function (event) {
         let target = event.target;
-        let orderitemNum = parseInt(target.name.replace('orderitems-', '').replace(
+        let orderitem_num = parseInt(target.name.replace('orderitems-', '').replace(
             '-product', ''));
-        let orderitemProductPk = target.options[target.selectedIndex].value;
-        console.log(orderitemProductPk)
+        let orderitem_product_pk = target.options[target.selectedIndex].value;
+            if(orderitem_product_pk > 0){
+                orderitem_product_pk = orderitem_product_pk
+            }else {
+                orderitem_product_pk = '';
+            }
 
-        if (orderitemProductPk) {
+
+        if (orderitem_product_pk) {
             $.ajax({
-                url: "products/product/" + orderitemProductPk + "/price/",
+                url: "/order/product/" + orderitem_product_pk + "/price/",
                 success: function (data) {
-                    // console.log('get product price', data);
                     if (data.price) {
-                        priceArr[orderitemNum] = parseFloat(data.price);
-                        if (isNaN(quantityArr[orderitemNum])) {
-                            quantityArr[orderitemNum] = 0;
+                        price_arr[orderitem_num] = parseFloat(data.price);
+                        if (isNaN(quantity_arr[orderitem_num])) {
+                            quantity_arr[orderitem_num] = 0;
+                            price_arr[orderitem_num] = 0;
                         }
-                        let priceHtml = '<span>' +
-                            data.price.toString().replace('.', ',') +
-                            '</span> &#8381;';
-                        let currentTr = $('.order_form table').find('tr:eq(' + (orderitemNum + 1) + ')');
 
-                        currentTr.find('td:eq(2)').html(priceHtml);
-
-                        if (isNaN(currentTr.find('input[type="number"]').val())) {
-                            currentTr.find('input[type="number"]').val(0);
-                        }
+                        let price_html = '<span class="orderitems-"' + 'orderitem_num'+ '-price">'+ data.price.toString().replace('.', ',') + '</span> руб';
+//                        let quantity_html = '<input class="form-control" id="id_orderitems' + 'orderitem_num' + '-quantity" type="number" name="orderitems' + 'orderitem_num' + '-quantity" value="" >'
+                        let cur_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
+                        cur_tr.find('td:eq(2)').html(price_html);
+//                        cur_tr.find('td:eq(1)').html(quantity_html);
                         orderSummaryRecalc();
                     }
-                },
-            });
-        }
-    });
+                }
+           });
+        }else{
+            let cur_tr = $('.order_form table').find('tr:eq(' + (orderitem_num + 1) + ')');
+            let price_html = '';
+            quantity_arr[orderitem_num] = 0;
+            price_arr[orderitem_num] = 0;
+            cur_tr.find('td:eq(2)').html(price_html);
+            orderSummaryRecalc();
+       }
+   });
 
 
     function orderSummaryUpdate(orderitem_price, delta_quantity){
-            delta_cost = orderitem_price * delta_quantity;
-            order_total_price = Number((order_total_price + delta_cost).toFixed(2));
-            order_total_quantity = order_total_quantity + delta_quantity;
+        delta_cost = orderitem_price * delta_quantity;
+        order_total_price = Number((order_total_price + delta_cost).toFixed(2));
+        order_total_quantity = order_total_quantity + delta_quantity;
 
 
-            $('.order_total_quantity').text(order_total_quantity.toString());
-            $('.order_total_cost').text(order_total_price.toString());
+        $('.order_total_quantity').text(order_total_quantity.toString());
+        $('.order_total_cost').text(order_total_price.toString());
     }
     function orderSummaryRecalc() {
-    orderTotalQuantity = 0;
-    orderTotalCost = 0;
+        order_total_quantity = 0;
+        order_total_cost = 0;
 
-    for (let i = 0; i < totalForms; i++) {
-        orderTotalQuantity += quantityArr[i];
-        orderTotalCost += quantityArr[i] * priceArr[i];
+        for (let i = 0; i < total_forms; i++) {
+            order_total_quantity += quantity_arr[i];
+            order_total_cost += price_arr[i] * quantity_arr[i];
+            console.log(order_total_cost)
+        }
+        $('.order_total_quantity').html(order_total_quantity.toString());
+        $('.order_total_cost').html(order_total_cost.toFixed(2).toString());
     }
-    $orderTotalQuantityDOM.html(orderTotalQuantity.toString());
-    $('.order_total_cost').html(Number(orderTotalCost.toFixed(2)).toString());
-}
 
     $('.formset_row').formset({
        addText: 'добавить продукт',
