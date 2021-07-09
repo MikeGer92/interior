@@ -23,7 +23,7 @@ class Command(BaseCommand):
         
         Product.objects.all().delete()
         for product in products:
-            category_name = product["category"]
+            category_name = product['category']
             # Получаем категорию по имени
             _category = ProductCategory.objects.get(name=category_name)
             # Заменяем название категории объектом
