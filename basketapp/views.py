@@ -1,3 +1,4 @@
+from django.db.models import F
 from django.shortcuts import render, HttpResponseRedirect, get_object_or_404
 from basketapp.models import Basket
 from mainapp.models import Product
@@ -32,6 +33,7 @@ def basket_add(request, pk):
     
     if old_basket_item:
         old_basket_item[0].quantity += 1
+        old_basket_item[0].quantity = F('quantity') +1
         old_basket_item[0].save()
     else:
         new_basket_item = Basket(user=request.user, product=product)

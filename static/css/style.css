@@ -288,7 +288,7 @@ html, body {
 .users_list button {
     border: 1px solid #eaeaea;
     border-radius: 5px;
-    height: 30px;
+    height: 100%;
     margin: 5px auto;
     padding: 0 15px;
 }
