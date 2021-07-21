@@ -2,6 +2,7 @@
 from django.conf.urls import include
 from django.contrib import admin
 import mainapp.views as mainapp
+from adminapp import views
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -16,7 +17,11 @@ urlpatterns = [
     re_path(r'^basket/', include('basketapp.urls', namespace='basket')),
     path('', include('social_django.urls', namespace='social')),
     re_path(r'^admin/', include('adminapp.urls', namespace='admin')),
-    path('order/', include('ordersapp.urls', namespace='order'))
+    path('order/', include('ordersapp.urls', namespace='order')),
+    path('admin/', admin.site.urls),
+    path('index/', views.index),
+    path('export_users_xls/', views.export_users_xls),
+    path('export_products_xls/', views.export_products_xls),
 
 
 ]

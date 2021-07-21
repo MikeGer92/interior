@@ -3,6 +3,7 @@
 import adminapp.views as adminapp
 from django.urls import re_path, path
 
+
 app_name="adminapp"
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
     re_path(r'^products/update/(?P<pk>\d+)/$', adminapp.product_update, name='product_update'),
     re_path(r'^products/delete/(?P<pk>\d+)/$', adminapp.product_delete, name='product_delete'),
     re_path(r'^all_orders/$', adminapp.all_orders, name='all_orders'),
+
 ]

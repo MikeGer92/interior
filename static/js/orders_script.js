@@ -2,10 +2,10 @@ window.onload = function () {
     let _quantity, _price, orderitem_num, delta_quantity, orderitem_quntity, delta_cost;
     let  quantity_arr = [],
          price_arr = [],
-         total_forms = parseInt($('input[name=orderitems-TOTAL_FORMS]').val()),
+         TOTAL_FORMS = parseInt($('input[name=orderitems-TOTAL_FORMS]').val()),
          order_total_quantity = parseInt($('.order_total_quantity').text()) || 0,
          order_total_price = parseFloat($('.order_total_cost').text()) || 0;
-    for (let i=0; i < total_forms; i++){
+    for (let i=0; i < TOTAL_FORMS; i++){
         _quantity = parseInt($('input[name=orderitems-' + i + '-quantity]').val());
         _price = parseFloat($('.orderitems-' + i + '-price').text().replace(',' , '.'));
 
@@ -97,7 +97,7 @@ $('.order_form select').change(function (event) {
         order_total_quantity = 0;
         order_total_cost = 0;
 
-        for (let i = 0; i < total_forms; i++) {
+        for (let i = 0; i < TOTAL_FORMS; i++) {
             order_total_quantity += quantity_arr[i];
             order_total_cost += price_arr[i] * quantity_arr[i];
         }
@@ -106,10 +106,10 @@ $('.order_form select').change(function (event) {
     }
 
     $('.formset_row').formset({
-       addText: 'добавить продукт',
-       deleteText: 'удалить',
-       prefix: 'orderitems',
-       removed: deleteOrderItem
+        addText: 'добавить продукт',
+        deleteText: 'удалить продукт',
+        prefix: 'orderitems',
+        removed: deleteOrderItem
     });
     function deleteOrderItem(row) {
        let target_name = row[0].querySelector('input[type="number"]').name;

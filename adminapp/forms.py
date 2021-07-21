@@ -13,7 +13,7 @@ class ShopUserAdminEditForm(ShopUserEditForm):
         
         
 class ProductCategoryEditForm(forms.ModelForm):
-    discount = forms.IntegerField(label='sales', required=0, min_value=0, max_value=90, initial=0)
+    discount = forms.IntegerField(label='Скидка', required=0, min_value=0, max_value=90, initial=0)
 
     class Meta:
         model = ProductCategory
