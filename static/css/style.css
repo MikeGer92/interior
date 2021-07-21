@@ -656,6 +656,7 @@ html, body {
 	list-style-type: none;
 	margin-top: 67px;
 	float: right;
+	height:70px;
 }
 .menu li {
 	float: left;
@@ -1480,6 +1481,7 @@ td:first-child {
 	background-color: #f4f4f4;
 	position: relative;
 	padding-left: 360px;
+	margin-top: 55px;
 }
 .links-menu {
 	margin:	27px auto 0px;	
@@ -1733,4 +1735,8 @@ td:first-child {
     justify-content: space-around;
     margin: 25px;
     border: 2px solid grey
+}
+.buttons_block {
+    display: flex;
+    justify-content: space-around;
 }
