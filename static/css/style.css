@@ -1479,9 +1479,9 @@ td:first-child {
 .links {
 	height: 70px;
 	background-color: #f4f4f4;
-	position: relative;
-	padding-left: 360px;
 	margin-top: 55px;
+	display: flex;
+	justify-content: space-around;
 }
 .links-menu {
 	margin:	27px auto 0px;	
