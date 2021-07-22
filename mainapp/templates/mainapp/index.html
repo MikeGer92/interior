@@ -26,9 +26,9 @@
 {% block content %}
     <div class="featured">
         <div class="featured-menu">
-            <a class="active" href="#">Популярные</a><a href="#">Новинки</a>
+            <a class="active" href="{% url 'products:index' %}">Популярные</a><a href="{% url 'products:category' 6 %}">Новинки</a>
         </div>
-        <a class="explore" href="#">показать все <img src="{% static 'img/arrow.png' %}" alt=""></a>
+        <a class="explore" href="{% url 'products:category' 0 %}">показать все <img src="{% static 'img/arrow.png' %}" alt=""></a>
         <div class="clearfix">
         </div>
         <div class="tab-content">

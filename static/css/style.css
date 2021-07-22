@@ -288,7 +288,7 @@ html, body {
 .users_list button {
     border: 1px solid #eaeaea;
     border-radius: 5px;
-    height: 30px;
+    height: 100%;
     margin: 5px auto;
     padding: 0 15px;
 }
@@ -656,6 +656,7 @@ html, body {
 	list-style-type: none;
 	margin-top: 67px;
 	float: right;
+	height:70px;
 }
 .menu li {
 	float: left;
@@ -1478,8 +1479,9 @@ td:first-child {
 .links {
 	height: 70px;
 	background-color: #f4f4f4;
-	position: relative;
-	padding-left: 360px;
+	margin-top: 55px;
+	display: flex;
+	justify-content: space-around;
 }
 .links-menu {
 	margin:	27px auto 0px;	
@@ -1702,4 +1704,39 @@ td:first-child {
 .user_role button {
     width: 140px;
     height: 100%;
+}
+.dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    align-items: center;
+    margin-top: 15px;
+
+}
+.dropdown-item {
+    display: none;
+    text-align:center
+
+}
+.dropdown:hover .dropdown-item{display:block;}
+
+.basket_orderlist {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 50px;
+}
+.order_productimage {
+    display: flex;
+    width: 270px;
+    height: 270px;
+}
+.basket_orderrecord {
+    display: flex;
+    justify-content: space-around;
+    margin: 25px;
+    border: 2px solid grey
+}
+.buttons_block {
+    display: flex;
+    justify-content: space-around;
 }

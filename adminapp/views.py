@@ -1,3 +1,5 @@
+from django.db import connection
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 from django.urls import reverse
@@ -9,8 +11,13 @@ from django.utils.decorators import method_decorator
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.http import HttpResponse
+
+import xlwt
 
 from django.views.generic.detail import DetailView
+
+from ordersapp.models import Order
 
 
 class UsersListView(ListView):
@@ -87,6 +94,7 @@ def categories(request):
     title = 'админка/категории'
     
     categories_list = ProductCategory.objects.all()
+
     
     content = {
         'title': title,
@@ -94,6 +102,23 @@ def categories(request):
     }
     
     return render(request, 'adminapp/categories.html', content)
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def all_orders(request):
+    title = 'админка/заказы'
+
+    orders_list = Order.objects.all()
+    for num, obj in enumerate(orders_list):
+        obj = orders_list[num]
+        print(obj.created)
+
+    content = {
+        'title': title,
+        'objects': orders_list
+    }
+
+    return render(request, 'adminapp/all_orders.html', content)
     
 
 class ProductCategoryCreateView(CreateView):
@@ -101,20 +126,36 @@ class ProductCategoryCreateView(CreateView):
     template_name = 'adminapp/category_update.html'
     success_url = reverse_lazy('admin:categories')
     fields = ('__all__')
-    
+
+
+def db_profile_by_type(__class__, param, queries):
+    pass
+
 
 class ProductCategoryUpdateView(UpdateView):
     model = ProductCategory
     template_name = 'adminapp/category_update.html'
     success_url = reverse_lazy('admin:categories')
-    fields = ('__all__')
+    # fields = ('__all__')
+    form_class = ProductCategoryEditForm
+
     
     def get_context_data(self, **kwargs):
-        context = super(ProductCategoryUpdateView, self).get_context_data(**kwargs)
+        # context = super(ProductCategoryUpdateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['title'] = 'категории/редактирование'
         return context
 
-	
+    def form_valid(self, form):
+        if 'discount' in form.cleaned_data:
+            discount = form.cleaned_data['discount']
+            if discount:
+                self.object.product_set.update(price=F('price') * (1 - discount / 100))
+                db_profile_by_type(self.__class__, 'UPDATE', connection.queries)
+
+        return super().form_valid(form)
+
+
 class ProductCategoryDeleteView(DeleteView):
     model = ProductCategory
     template_name = 'adminapp/category_delete.html'
@@ -200,3 +241,68 @@ def product_delete(request, pk):
     }
     
     return render(request, 'adminapp/product_delete.html', content)
+
+
+def index(request):
+    return render(request, "index.html")
+
+
+def export_users_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="users.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Users')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Username', 'First name', 'Last name', 'Email address', ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    rows = ShopUser.objects.all().values_list('username', 'first_name', 'last_name', 'email')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
+
+def export_products_xls(request):
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="products.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('Products')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['id', 'name', 'category', 'price' ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+    cn = 'category'
+    rows = Product.objects.all().values_list('id', 'name', 'category', 'price')
+    for row in rows:
+        row_num += 1
+        for col_num in range(len(row)):
+            ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
